@@ -1,0 +1,5 @@
+name: 'Tradedoubler Vouchers'
+type: module
+description: 'Fetch and display vouchers from Tradedoubler API.'
+core_version_requirement: ^11
+package: Custom

@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Contains tradedoubler_vouchers.module.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function tradedoubler_vouchers_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'tradedoubler_vouchers.voucher_page':
+      return t('Displays voucher codes from Tradedoubler API.');
+  }
+}

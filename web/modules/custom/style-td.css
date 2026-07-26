@@ -1,0 +1,11 @@
+.voucher-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.voucher-table th, .voucher-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+.voucher-table th {
+  background-color: #f5f5f5;
+}

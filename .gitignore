@@ -1,0 +1,57 @@
+# === Drupal core directories ===
+/core/
+/vendor/
+
+# === Drupal site files ===
+web/sites/default/files/
+web/sites/default/private/
+
+# === Drupal settings (never commit secrets) ===
+web/sites/default/settings.php
+web/sites/default/settings.local.php
+web/sites/default/services.yml
+web/sites/default/*.sqlite
+
+# === Config sync (only if you store it elsewhere) ===
+# If your config is in config/sync, DO NOT ignore it.
+# If your config is inside web/sites/default, ignore it:
+web/sites/default/config/
+
+# === SQL dumps (critical) ===
+*.sql
+*.sql.gz
+*.sql.zip
+*.dump
+
+# === Environment files ===
+.env
+.env.local
+.env.*.local
+
+# === DDEV ===
+.ddev/
+
+# === Composer ===
+composer.phar
+
+# === Logs ===
+*.log
+
+# === OS junk ===
+.DS_Store
+Thumbs.db
+
+# === IDE junk ===
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# === Node / build tools (if used) ===
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# === Temporary files ===
+tmp/
+cache/

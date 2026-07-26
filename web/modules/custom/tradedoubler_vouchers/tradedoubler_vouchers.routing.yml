@@ -1,0 +1,7 @@
+tradedoubler_vouchers.voucherPage:
+  path: '/vouchers'
+  defaults:
+    _controller: '\Drupal\tradedoubler_vouchers\Controller\VoucherController::voucherPage'
+    _title: 'Voucher Codes'
+  requirements:
+    _permission: 'access content'
