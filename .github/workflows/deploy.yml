@@ -1,0 +1,37 @@
+name: Deploy to Krystal
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy code to server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          cd /home/westafr1/westafricaphones
+
+          # Pull latest code
+          git pull origin main
+
+          # Install PHP dependencies (no dev)
+          composer install --no-dev --prefer-dist --no-interaction
+
+          # Clear Drupal caches
+          cd web
+          php core/scripts/drupal cache:rebuild
+
+          EOF
