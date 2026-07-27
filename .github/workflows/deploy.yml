@@ -42,7 +42,7 @@ jobs:
           cd $RELEASE_DIR
 
           # Install PHP dependencies
-          composer install --no-dev --prefer-dist --no-interaction
+          composer install --no-dev --prefer-dist --no-interaction --no-scripts
 
           # Backup database BEFORE updates
           mysqldump -u westafr1 -p"${{ secrets.DB_PASSWORD }}" westafr1_westafricaphones > $BACKUP_DIR/db-$TIMESTAMP.sql
