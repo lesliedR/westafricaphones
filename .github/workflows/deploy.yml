@@ -28,7 +28,7 @@ jobs:
           CURRENT_DIR="/home/westafr1/current"
           BACKUP_DIR="/home/westafr1/backups"
 
-          sshpass -p "$SSH_PASSWORD" ssh -p 722 -o StrictHostKeyChecking=no westafr1@planck.krystal.uk "
+          sshpass -p "$SSH_PASSWORD" ssh -p 722 -o StrictHostKeyChecking=no westafr1@planck.krystal.uk << EOF
           mkdir -p "$RELEASE_DIR"
           mkdir -p "$BACKUP_DIR"
 
