@@ -33,12 +33,12 @@ jobs:
           mkdir -p "$RELEASE_DIR"
           mkdir -p "$BACKUP_DIR"
 
-          # Copy your project (NOT the entire server)
+          # Copy your project
           cp -R "$PROJECT_DIR"/* "$RELEASE_DIR"/
 
           cd "$RELEASE_DIR"
 
-          # Install dependencies WITHOUT scaffolding (Krystal blocks it)
+          # Install dependencies WITHOUT scaffolding
           composer install --no-dev --prefer-dist --no-interaction --no-scripts
 
           # Backup database
