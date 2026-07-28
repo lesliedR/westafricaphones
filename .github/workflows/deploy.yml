@@ -10,50 +10,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up SSH key
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Install sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
 
       - name: Deploy to Krystal
+        env:
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
           TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
+
+          PROJECT_DIR="/home/westafr1/westafricaphones"
           RELEASE_DIR="/home/westafr1/releases/$TIMESTAMP"
           CURRENT_DIR="/home/westafr1/current"
-          PROJECT_DIR="/home/westafr1/westafricaphones"
           BACKUP_DIR="/home/westafr1/backups"
 
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -p 722 -o StrictHostKeyChecking=no westafr1@planck.krystal.uk << 'EOF'
+          sshpass -p "$SSH_PASSWORD" ssh -p 722 -o StrictHostKeyChecking=no westafr1@planck.krystal.uk << EOF
 
-          # Create release + backup directories if missing
-          mkdir -p /home/westafr1/releases
-          mkdir -p /home/westafr1/backups
+          mkdir -p "$RELEASE_DIR"
+          mkdir -p "$BACKUP_DIR"
 
-          # Create new release folder
-          mkdir -p $RELEASE_DIR
+          # Copy your project (NOT the entire server)
+          cp -R "$PROJECT_DIR"/* "$RELEASE_DIR"/
 
-          # Copy repo into release folder
-          cp -R $PROJECT_DIR/* $RELEASE_DIR/
+          cd "$RELEASE_DIR"
 
-          # Move into release folder
-          cd $RELEASE_DIR
-
-          # Install PHP dependencies
+          # Install dependencies WITHOUT scaffolding (Krystal blocks it)
           composer install --no-dev --prefer-dist --no-interaction --no-scripts
 
-          # Backup database BEFORE updates
-          mysqldump -u westafr1 -p"${{ secrets.DB_PASSWORD }}" westafr1_westafricaphones > $BACKUP_DIR/db-$TIMESTAMP.sql
+          # Backup database
+          mysqldump -u westafr1 -p"$DB_PASSWORD" westafr1_westafricaphones > "$BACKUP_DIR/db-$TIMESTAMP.sql"
 
-          # Run database updates
-          php $RELEASE_DIR/web/core/scripts/drupal updb -y
+          # Run Drupal database updates
+          php "$RELEASE_DIR/web/core/scripts/drupal" updb -y
 
-          # Switch symlink atomically
-          ln -sfn $RELEASE_DIR $CURRENT_DIR
+          # Switch symlink to new release
+          ln -sfn "$RELEASE_DIR" "$CURRENT_DIR"
 
           # Clear caches
-          php $CURRENT_DIR/web/core/scripts/drupal cache:rebuild
+          php "$CURRENT_DIR/web/core/scripts/drupal" cache:rebuild
 
           EOF
