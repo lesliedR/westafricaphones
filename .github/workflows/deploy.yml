@@ -28,29 +28,24 @@ jobs:
           CURRENT_DIR="/home/westafr1/current"
           BACKUP_DIR="/home/westafr1/backups"
 
-          sshpass -p "$SSH_PASSWORD" ssh -p 722 -o StrictHostKeyChecking=no westafr1@planck.krystal.uk << EOF
+          sshpass -p "$SSH_PASSWORD" ssh -p 722 -o StrictHostKeyChecking=no westafr1@planck.krystal.uk << 'EOF'
 
           mkdir -p "$RELEASE_DIR"
           mkdir -p "$BACKUP_DIR"
 
-          # Copy your project
           cp -R "$PROJECT_DIR"/* "$RELEASE_DIR"/
 
           cd "$RELEASE_DIR"
 
-          # Install dependencies WITHOUT scaffolding
+          # FIXED: Disable scaffolding
           composer install --no-dev --prefer-dist --no-interaction --no-scripts
 
-          # Backup database
-          mysqldump -u westafr1 -p"$DB_PASSWORD" westafr1_westafricaphones > "$BACKUP_DIR/db-$TIMESTAMP.sql"
+          mysqldump -u westafr1_westafricaphones -p"$DB_PASSWORD" westafr1_westafricaphones > "$BACKUP_DIR/db-$TIMESTAMP.sql"
 
-          # Run Drupal database updates
           php "$RELEASE_DIR/web/core/scripts/drupal" updb -y
 
-          # Switch symlink to new release
           ln -sfn "$RELEASE_DIR" "$CURRENT_DIR"
 
-          # Clear caches
           php "$CURRENT_DIR/web/core/scripts/drupal" cache:rebuild
 
           EOF
