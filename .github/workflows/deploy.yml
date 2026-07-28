@@ -26,7 +26,7 @@ jobs:
           PROJECT_DIR="/home/westafr1/westafricaphones"
           BACKUP_DIR="/home/westafr1/backups"
 
-          ssh -p 722 -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -p 722 -o StrictHostKeyChecking=no westafr1@planck.krystal.uk << 'EOF'
 
           # Create release + backup directories if missing
           mkdir -p /home/westafr1/releases
